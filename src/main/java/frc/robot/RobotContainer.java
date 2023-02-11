@@ -8,6 +8,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -26,8 +28,14 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  // Setup Sendable chooser for picking autonomous program in SmartDashboard
+  private SendableChooser<Command> m_chooser = new SendableChooser<>();
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Configure Autonomous Options
+    autonomousOptions();
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -57,7 +65,18 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    // Get the selected Auto in smartDashboard
+    return m_chooser.getSelected();
+  }
+
+  /**
+   * Use this to set Autonomous options for selection in Smart Dashboard
+   */
+  private void autonomousOptions() {
+    // Example adding Autonomous option to chooser
+    m_chooser.addOption("Example", Autos.exampleAuto(m_exampleSubsystem));
+
+    // Put the chooser on the dashboard
+    SmartDashboard.putData(m_chooser);
   }
 }
