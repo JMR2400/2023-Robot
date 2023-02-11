@@ -8,6 +8,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.NavXGyro;
+import frc.robot.commands.Autos;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -29,11 +32,17 @@ public class RobotContainer {
   public final CommandJoystick leftStick = new CommandJoystick(OperatorConstants.LeftStick);
   public final CommandJoystick rightStick = new CommandJoystick(OperatorConstants.RightStick);
 
+  // Setup Sendable chooser for picking autonomous program in SmartDashboard
+  private SendableChooser<Command> m_chooser = new SendableChooser<>();
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
+  
     CommandScheduler.getInstance()
     .setDefaultCommand(_drive, new DriveCommand(_drive, leftStick, rightStick, _gyro));
+
+    // Configure Autonomous Options
+    autonomousOptions();
 
     // Configure the trigger bindings
     configureBindings();
@@ -59,7 +68,18 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
+    // Get the selected Auto in smartDashboard
+    return m_chooser.getSelected();
+  }
+
+  /**
+   * Use this to set Autonomous options for selection in Smart Dashboard
+   */
+  private void autonomousOptions() {
+    // Example adding Autonomous option to chooser
+    m_chooser.addOption("Example", Autos.exampleAuto(m_exampleSubsystem));
+
+    // Put the chooser on the dashboard
+    SmartDashboard.putData(m_chooser);
   }
 }
