@@ -102,7 +102,7 @@ public class Drive extends SubsystemBase {
 	}
 
 	public void resetOdometry(Pose2d pose) {
-		odometer.resetPosition(this._gyro.getRotation2d(), null, pose);
+		odometer.resetPosition(this._gyro.getRotation2d(), getPositions(), pose);
 	}
 
 	public static Drive getInstance(NavXGyro gyro) {
