@@ -68,4 +68,22 @@ public final class Constants {
       public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
     }
   }
+
+  public static final class ArmConstants {
+    public static final int shoulderMotorId = 23;
+    public static final int extensionMotorId = 24;
+
+    public static final int shoulderEncoderPositionFactor = 1;
+    public static final int shoulderEncoderVelocityFactor = 1;
+    public static double shoulderP = 0;
+    public static double shoulderI = 0;
+    public static double shoulderD = 0;
+    public static double shoulderMinOutput = 0;
+    public static double shoulderMaxOutput = 0;
+    public static int kshoulderMotorCurrentLimit = 40;
+  }
+
+  public static final class IntakeConstants {
+    public static final int intakeMotorId = 25;
+  }
 }

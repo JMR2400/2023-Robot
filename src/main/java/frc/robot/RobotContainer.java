@@ -6,8 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NavXGyro;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,9 +32,12 @@ public class RobotContainer {
   // The robot's subsystems 
   public static NavXGyro _gyro = NavXGyro.getInstance(); // This must be called before Drive as it is used by the Drive
   public static Drive _drive = Drive.getInstance(_gyro);
+  public static Intake _intake = Intake.getInstance();
+  public static Arm _arm = Arm.getInstance();
 
   public final CommandJoystick leftStick = new CommandJoystick(OperatorConstants.LeftStick);
   public final CommandJoystick rightStick = new CommandJoystick(OperatorConstants.RightStick);
+  public final CommandXboxController opController = new CommandXboxController(OperatorConstants.OpController);
 
   // Setup Sendable chooser for picking autonomous program in SmartDashboard
   private SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -40,6 +47,12 @@ public class RobotContainer {
   
     CommandScheduler.getInstance()
     .setDefaultCommand(_drive, new DriveCommand(_drive, leftStick, rightStick, _gyro));
+
+    CommandScheduler.getInstance()
+    .setDefaultCommand(_arm, new ArmCommand(_arm, opController));
+    
+   // CommandScheduler.getInstance()
+    //.setDefaultCommand(_intake, new IntakeCommand(_intake, opController));
 
     // Configure Autonomous Options
     autonomousOptions();
@@ -60,6 +73,14 @@ public class RobotContainer {
   private void configureBindings() {
      //Reset NavX
     leftStick.button(7).onTrue(new InstantCommand(() -> _gyro.zeroNavHeading(), _gyro));
+
+    // Extension Out
+    opController.povUp().whileTrue(new InstantCommand(() -> _arm.extensionMove(.5)));
+    opController.povUp().whileFalse(new InstantCommand(() -> _arm.extensionMove(0)));
+
+    // Extension In
+    opController.povDown().whileTrue(new InstantCommand(() -> _arm.extensionMove(-.5)));
+    opController.povDown().whileFalse(new InstantCommand(() -> _arm.extensionMove(0)));
   }
 
   /**
