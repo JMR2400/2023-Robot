@@ -91,7 +91,7 @@ public class Drive extends SubsystemBase {
 				invertSteer);
 
 		odometer = new SwerveDriveOdometry(DriveConstants.FrameConstants.kDriveKinematics,
-				new Rotation2d(0), getPositions());
+		this._gyro.getNavXRotation2D(), getPositions());
 
 	}
 

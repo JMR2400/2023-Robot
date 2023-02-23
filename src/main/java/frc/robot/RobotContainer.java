@@ -99,7 +99,9 @@ public class RobotContainer {
   private void autonomousOptions() {
     // Example adding Autonomous option to chooser
     //m_chooser.addOption("Example", Autos.exampleAuto(m_exampleSubsystem));
-    m_chooser.addOption("Follow Path", Autos.driveToHalfField(_drive));
+    m_chooser.addOption("Do Nothing", Autos.doNothing());
+    m_chooser.addOption("Follow Path", Autos.followPath(_drive, _gyro));
+
     // Put the chooser on the dashboard
     SmartDashboard.putData(m_chooser);
   }

@@ -18,7 +18,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.autonomous.DoNothingCommand;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.NavXGyro;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
@@ -26,12 +28,11 @@ public final class Autos {
   //   return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
   // }
 
-  public static CommandBase driveToHalfField(Drive drive) {
-      // 1. Create trajectory settings
-     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-         AutoConstants.kMaxSpeedMetersPerSecond,
-         AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-             .setKinematics(DriveConstants.FrameConstants.kDriveKinematics);
+  public static CommandBase doNothing() {
+    return new DoNothingCommand();
+  }
+
+  public static CommandBase followPath(Drive drive, NavXGyro navX) {
 
       // 3. Define PID controllers for tracking trajectory
       PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
@@ -41,7 +42,7 @@ public final class Autos {
       
 
      // 2. Generate trajectory
-     PathPlannerTrajectory driveForwardTrajectory = PathPlanner.loadPath("Drive Forward", 4, 3);
+     PathPlannerTrajectory driveForwardTrajectory = PathPlanner.loadPath("180-Cable-K-Ramp", 4, 3);
 
      PPSwerveControllerCommand driveForwardPathCommand = new PPSwerveControllerCommand(
       driveForwardTrajectory,
@@ -56,10 +57,41 @@ public final class Autos {
       return new SequentialCommandGroup(
         new InstantCommand(() -> {
           // Reset odometry for the first path you run during auto
+              navX.setGyroAngleOffset(180);
               drive.resetOdometry(driveForwardTrajectory.getInitialHolonomicPose());
         }),
         driveForwardPathCommand);
   }
+
+  public static CommandBase centerRamp(Drive drive) {
+
+    // 3. Define PID controllers for tracking trajectory
+    PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+    PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+    PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 1, 0);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    
+
+   // 2. Generate trajectory
+   PathPlannerTrajectory driveForwardTrajectory = PathPlanner.loadPath("Center-Ramp", 4, 3);
+
+   PPSwerveControllerCommand driveForwardPathCommand = new PPSwerveControllerCommand(
+    driveForwardTrajectory,
+    drive::getPose,
+    DriveConstants.FrameConstants.kDriveKinematics,
+    xController,
+    yController,
+    thetaController,
+    drive::setModuleStates,
+    drive);
+
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> {
+        // Reset odometry for the first path you run during auto
+            drive.resetOdometry(driveForwardTrajectory.getInitialHolonomicPose());
+      }),
+      driveForwardPathCommand);
+}
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
