@@ -9,24 +9,26 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.autonomous.DoNothingCommand;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NavXGyro;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
   // public static CommandBase exampleAuto(ExampleSubsystem subsystem) {
-  //   return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
+  // return Commands.sequence(subsystem.exampleMethodCommand(), new
+  // ExampleCommand(subsystem));
   // }
+
+  private Autos() {
+    throw new UnsupportedOperationException("This is a utility class!");
+  }
 
   public static CommandBase doNothing() {
     return new DoNothingCommand();
@@ -34,31 +36,30 @@ public final class Autos {
 
   public static CommandBase followPath(Drive drive, NavXGyro navX) {
 
-      // 3. Define PID controllers for tracking trajectory
-      PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-      PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-      PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 1, 0);
-      thetaController.enableContinuousInput(-Math.PI, Math.PI);
-      
+    // 3. Define PID controllers for tracking trajectory
+    PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+    PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+    PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 1, 0);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-     // 2. Generate trajectory
-     PathPlannerTrajectory driveForwardTrajectory = PathPlanner.loadPath("180-Cable-K-Ramp", 4, 3);
+    // 2. Generate trajectory
+    PathPlannerTrajectory driveForwardTrajectory = PathPlanner.loadPath("180-Cable-K-Ramp", 4, 3);
 
-     PPSwerveControllerCommand driveForwardPathCommand = new PPSwerveControllerCommand(
-      driveForwardTrajectory,
-      drive::getPose,
-      DriveConstants.FrameConstants.kDriveKinematics,
-      xController,
-      yController,
-      thetaController,
-      drive::setModuleStates,
-      drive);
+    PPSwerveControllerCommand driveForwardPathCommand = new PPSwerveControllerCommand(
+        driveForwardTrajectory,
+        drive::getPose,
+        DriveConstants.FrameConstants.kDriveKinematics,
+        xController,
+        yController,
+        thetaController,
+        drive::setModuleStates,
+        drive);
 
-      return new SequentialCommandGroup(
+    return new SequentialCommandGroup(
         new InstantCommand(() -> {
           // Reset odometry for the first path you run during auto
-              navX.setGyroAngleOffset(180);
-              drive.resetOdometry(driveForwardTrajectory.getInitialHolonomicPose());
+          navX.setGyroAngleOffset(180);
+          drive.resetOdometry(driveForwardTrajectory.getInitialHolonomicPose());
         }),
         driveForwardPathCommand);
   }
@@ -70,30 +71,39 @@ public final class Autos {
     PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
     PIDController thetaController = new PIDController(AutoConstants.kPThetaController, 1, 0);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    
 
-   // 2. Generate trajectory
-   PathPlannerTrajectory driveForwardTrajectory = PathPlanner.loadPath("Center-Ramp", 4, 3);
+    // 2. Generate trajectory
+    PathPlannerTrajectory driveForwardTrajectory = PathPlanner.loadPath("Center-Ramp", 4, 3);
 
-   PPSwerveControllerCommand driveForwardPathCommand = new PPSwerveControllerCommand(
-    driveForwardTrajectory,
-    drive::getPose,
-    DriveConstants.FrameConstants.kDriveKinematics,
-    xController,
-    yController,
-    thetaController,
-    drive::setModuleStates,
-    drive);
+    PPSwerveControllerCommand driveForwardPathCommand = new PPSwerveControllerCommand(
+        driveForwardTrajectory,
+        drive::getPose,
+        DriveConstants.FrameConstants.kDriveKinematics,
+        xController,
+        yController,
+        thetaController,
+        drive::setModuleStates,
+        drive);
 
     return new SequentialCommandGroup(
-      new InstantCommand(() -> {
-        // Reset odometry for the first path you run during auto
-            drive.resetOdometry(driveForwardTrajectory.getInitialHolonomicPose());
-      }),
-      driveForwardPathCommand);
-}
+        new InstantCommand(() -> {
+          // Reset odometry for the first path you run during auto
+          drive.resetOdometry(driveForwardTrajectory.getInitialHolonomicPose());
+        }),
+        driveForwardPathCommand);
+  }
 
-  private Autos() {
-    throw new UnsupportedOperationException("This is a utility class!");
+  public static CommandBase CubeInOut(Intake intake) {
+    return new SequentialCommandGroup(
+        new IntakeConeCommand(intake, false, .25),
+        new IntakeConeCommand(intake, true, 2)
+    );
+  }
+
+  public static CommandBase ConeInOut(Intake intake) {
+    return new SequentialCommandGroup(
+        new IntakeConeCommand(intake, false, 1),
+        new IntakeConeCommand(intake, true, 2)
+    );
   }
 }
