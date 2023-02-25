@@ -5,17 +5,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 
-public class ArmCommand  extends CommandBase {
+public class ExtensionCommand  extends CommandBase {
 
     private Arm _arm;
-    private boolean _isRaise;
+    private boolean _isExtending;
     private double _duration;
     private Timer _timer;
 
     /** Creates a new ArmCommand. */
-    public ArmCommand(Arm arm, boolean isRaise, double runDurationInSeconds) {
+    public ExtensionCommand(Arm arm, boolean isExtending, double runDurationInSeconds) {
         this._arm = arm;
-        this._isRaise = isRaise;
+        this._isExtending = isExtending;
         this._duration = runDurationInSeconds;
 
         addRequirements(arm);
@@ -31,10 +31,10 @@ public class ArmCommand  extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if(_isRaise) {
-            _arm.shoulderMove(.4);
+        if(_isExtending) {
+            _arm.extensionMove(.4);
         } else {
-            _arm.shoulderMove(-.4);
+            _arm.extensionMove(-.4);
         }
     }
 

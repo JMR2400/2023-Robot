@@ -49,10 +49,10 @@ public class Arm extends SubsystemBase {
         // shoulderPIDController.setI(ArmConstants.shoulderI);
         // shoulderPIDController.setD(ArmConstants.shoulderD);
         // shoulderPIDController.setOutputRange(ArmConstants.shoulderMinOutput, ArmConstants.shoulderMaxOutput);
-
+        
         shoulderMotor.setIdleMode(IdleMode.kBrake);
         shoulderMotor.setInverted(true);
-        shoulderMotor.setOpenLoopRampRate(5);
+        shoulderMotor.setOpenLoopRampRate(2);
         //shoulderMotor.setSmartCurrentLimit(ArmConstants.kshoulderMotorCurrentLimit);
         
         extensionMotor.setIdleMode(IdleMode.kBrake);

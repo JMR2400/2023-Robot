@@ -6,11 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.IntakeControllerCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NavXGyro;
-import frc.robot.commands.ArmCommand;
+import frc.robot.commands.ArmControllerCommand;
 import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,10 +54,10 @@ public class RobotContainer {
         .setDefaultCommand(_drive, new DriveCommand(_drive, leftStick, rightStick, _gyro));
 
     CommandScheduler.getInstance()
-        .setDefaultCommand(_arm, new ArmCommand(_arm, opController));
+        .setDefaultCommand(_arm, new ArmControllerCommand(_arm, opController));
 
-    // CommandScheduler.getInstance()
-    // .setDefaultCommand(_intake, new IntakeCommand(_intake, opController));
+    CommandScheduler.getInstance()
+    .setDefaultCommand(_intake, new IntakeControllerCommand(_intake, opController));
 
     // Configure Autonomous Options
     autonomousOptions();
@@ -82,14 +83,6 @@ public class RobotContainer {
   private void configureBindings() {
     // Reset NavX
     leftStick.button(7).onTrue(new InstantCommand(() -> _gyro.zeroNavHeading(), _gyro));
-
-    // Extension Out
-    opController.povUp().whileTrue(new InstantCommand(() -> _arm.extensionMove(.5)));
-    opController.povUp().whileFalse(new InstantCommand(() -> _arm.extensionMove(0)));
-
-    // Extension In
-    opController.povDown().whileTrue(new InstantCommand(() -> _arm.extensionMove(-.5)));
-    opController.povDown().whileFalse(new InstantCommand(() -> _arm.extensionMove(0)));
   }
 
   /**
@@ -111,8 +104,7 @@ public class RobotContainer {
     m_chooser.addOption("Do Nothing", Autos.doNothing());
     m_chooser.addOption("Follow Path", Autos.followPath(_drive, _gyro));
     m_chooser.addOption("Center Ramp", Autos.centerRamp(_drive));
-    m_chooser.addOption("Cube In Out", Autos.CubeInOut(_intake));
-    m_chooser.addOption("Cone In Out", Autos.ConeInOut(_intake));
+    m_chooser.addOption("Score Cone", Autos.ScoreCone(_intake, _arm));
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(m_chooser);

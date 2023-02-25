@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.autonomous.DoNothingCommand;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NavXGyro;
@@ -93,17 +94,13 @@ public final class Autos {
         driveForwardPathCommand);
   }
 
-  public static CommandBase CubeInOut(Intake intake) {
+  public static CommandBase ScoreCone(Intake intake, Arm arm) {
     return new SequentialCommandGroup(
-        new IntakeConeCommand(intake, false, .25),
-        new IntakeConeCommand(intake, true, 2)
-    );
-  }
-
-  public static CommandBase ConeInOut(Intake intake) {
-    return new SequentialCommandGroup(
-        new IntakeConeCommand(intake, false, 1),
-        new IntakeConeCommand(intake, true, 2)
+        new ArmCommand(arm, true, 3),
+        new ExtensionCommand(arm, true, 2),
+        new IntakeConeCommand(intake, true, 2),
+        new ExtensionCommand(arm, false, 2),
+        new ArmCommand(arm, false, 3)
     );
   }
 }

@@ -2,20 +2,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Arm;
 
-public class IntakeCommand extends CommandBase {
+public class ArmControllerCommand extends CommandBase {
 
     private CommandXboxController _controller;
 
-    private Intake _intake;
+    private Arm _arm;
 
-    /** Creates a new IntakeCommand. */
-    public IntakeCommand(Intake intake, CommandXboxController controller) {
-        this._intake = intake;
+    /** Creates a new ArmCommand. */
+    public ArmControllerCommand(Arm arm, CommandXboxController controller) {
+        this._arm = arm;
         this._controller = controller;
 
-        addRequirements(intake);
+        addRequirements(arm);
     }
 
     // Called when the command is initially scheduled.
@@ -27,9 +27,15 @@ public class IntakeCommand extends CommandBase {
     @Override
     public void execute() {
         if(Math.abs(_controller.getRightY()) >= .07) {
-            _intake.intakeMove(_controller.getRightY());
+            _arm.extensionMove(-_controller.getRightY());
         } else {
-            _intake.intakeMove(0);
+            _arm.extensionMove(0);
+        }
+
+        if(Math.abs(_controller.getLeftY()) >= .07) {
+            _arm.shoulderMove(_controller.getLeftY()*.5);
+        } else {
+            _arm.shoulderMove(0);
         }
     }
 
