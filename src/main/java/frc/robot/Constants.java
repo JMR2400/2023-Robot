@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -25,6 +26,33 @@ public final class Constants {
     public static final int LeftStick = 0;
     public static final int RightStick = 1;
     public static final int OpController = 2;
+  }
+
+  public static class AutoConstants {
+    public static final double kPhysicalMaxSpeedMetersPerSecond = 6;
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
+
+    public static final double kMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 2;
+    public static final double kMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 5;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 2;
+    public static final double kPXController = 5;
+    public static final double kPYController = 5;
+    public static final double kPThetaController = 5;
+
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
+        new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond,
+            kMaxAngularAccelerationRadiansPerSecondSquared);
+    public static final double kGoToPointLinearP = 0;
+    public static final double kGoToPointLinearF = 0.5;
+    public static final double kGoToPointAngularP = 0;
+    public static final double kGoToPointAngularF = 0;
+
+    public static final double maxTrajectoryOverrunSeconds = 3;
+    public static final double kMaxDistanceMetersError = 0.1;
+    public static final double kMaxAngleDegreesError = 5;
+
   }
 
   public static class DriveConstants {
@@ -67,5 +95,23 @@ public final class Constants {
       public static final double kPhysicalMaxSpeedMetersPerSecond = 6;
       public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI;
     }
+  }
+
+  public static final class ArmConstants {
+    public static final int shoulderMotorId = 23;
+    public static final int extensionMotorId = 24;
+
+    public static final int shoulderEncoderPositionFactor = 1;
+    public static final int shoulderEncoderVelocityFactor = 1;
+    public static double shoulderP = 0;
+    public static double shoulderI = 0;
+    public static double shoulderD = 0;
+    public static double shoulderMinOutput = 0;
+    public static double shoulderMaxOutput = 0;
+    public static int kshoulderMotorCurrentLimit = 40;
+  }
+
+  public static final class IntakeConstants {
+    public static final int intakeMotorId = 25;
   }
 }

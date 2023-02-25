@@ -9,7 +9,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.SPI;
 
-public class NavXGyro extends SubsystemBase { 
+public class NavXGyro extends SubsystemBase {
 
   private static NavXGyro instance;
   public static AHRS navX;
@@ -22,9 +22,9 @@ public class NavXGyro extends SubsystemBase {
 
     zeroHeading = getNavHeading();
     zeroAngle = getNavAngle();
-    System.out.println("Setup ZeroAngle " + zeroAngle); 
+    System.out.println("Setup ZeroAngle " + zeroAngle);
   }
-  
+
   // Public Methods
   public static NavXGyro getInstance() {
     if (instance == null) {
@@ -34,44 +34,49 @@ public class NavXGyro extends SubsystemBase {
   }
 
   public double getNavHeading() {
-		double heading = navX.getFusedHeading();
-		return heading;
-	}
+    double heading = navX.getFusedHeading();
+    return heading;
+  }
 
-	public double getNavAngle() {
-		double angle = navX.getAngle();
-		return angle;
-	}
+  public double getNavAngle() {
+    double angle = navX.getAngle();
+    return angle;
+  }
 
-	public void zeroNavHeading() {
-		//navX.zeroYaw();
+  public void setGyroAngleOffset(double offset) {
+    navX.setAngleAdjustment(offset);
+  }
+
+  public void zeroNavHeading() {
+    // navX.zeroYaw();
     navX.reset();
     zeroHeading = getNavHeading();
     zeroAngle = getNavAngle();
     System.out.println("ZeroHeading: " + zeroHeading);
-    System.out.println("ZeroAngle: " + zeroAngle);  
+    System.out.println("ZeroAngle: " + zeroAngle);
   }
 
-  public double getZeroHeading(){
+  public double getZeroHeading() {
     return zeroHeading;
   }
 
-  public double getZeroAngle(){
+  public double getZeroAngle() {
     return zeroAngle;
   }
 
-  public Rotation2d getNavXRotation2D(){
+  public Rotation2d getNavXRotation2D() {
     return Rotation2d.fromDegrees(navX.getAngle());
   }
 
-    /*
-      Note that the math in the getHeading method is used to invert the direction of 
-      the gyro for use by wpilib which treats gyros backwards.
-      Gyros are normally clockwise positive. Wpilib wants 
-      counter-clockwise positive.
-  */
+  /*
+   * Note that the math in the getHeading method is used to invert the direction
+   * of
+   * the gyro for use by wpilib which treats gyros backwards.
+   * Gyros are normally clockwise positive. Wpilib wants
+   * counter-clockwise positive.
+   */
   public double getHeading() {
-     return Math.IEEEremainder(-getNavAngle(), 360);
+    return Math.IEEEremainder(-getNavAngle(), 360);
   }
 
   public Rotation2d getRotation2d() {
