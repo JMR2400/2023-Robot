@@ -1,6 +1,9 @@
 package frc.robot.commands;
 
+import java.io.Console;
+
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
@@ -31,7 +34,9 @@ public class ArmPositionCommand  extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        SmartDashboard.putNumber("expectedPosition", _expectedPosition);
         if(_expectedPosition > ArmConstants.shoulderEncoderBottom && _expectedPosition < ArmConstants.shoulderEncoderMax) {
+            System.out.println("going to position: " + _expectedPosition + " at " + _arm.getShoulderPosition());
             _arm.setShoulderPosition(_expectedPosition);            
         } 
     }

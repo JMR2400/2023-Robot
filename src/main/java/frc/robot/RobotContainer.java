@@ -4,14 +4,17 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ExtensionPositionCommand;
 import frc.robot.commands.IntakeControllerCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NavXGyro;
 import frc.robot.commands.ArmControllerCommand;
+import frc.robot.commands.ArmPositionCommand;
 import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -84,11 +87,11 @@ public class RobotContainer {
     // Reset NavX
     leftStick.button(7).onTrue(new InstantCommand(() -> _gyro.zeroNavHeading(), _gyro));
 
-    // opController.a().onTrue(new ArmPositionCommand(_arm, ArmConstants.shoulderEncoderMidCone, 2));
-    // opController.x().onTrue(new ArmPositionCommand(_arm, ArmConstants.shoulderEncoderHighCone, 2));
+    opController.a().whileTrue(new ArmPositionCommand(_arm, ArmConstants.shoulderEncoderMidCone, 2));
+    opController.x().whileTrue(new ArmPositionCommand(_arm, ArmConstants.shoulderEncoderHighCone, 2));
 
-    // opController.b().onTrue(new ExtensionPositionCommand(_arm, ArmConstants.shoulderEncoderMidCone, 2));
-    // opController.y().onTrue(new ExtensionPositionCommand(_arm, ArmConstants.shoulderEncoderHighCone, 2));
+    opController.b().whileTrue(new ExtensionPositionCommand(_arm, ArmConstants.shoulderEncoderMidCone, 2));
+    opController.y().whileTrue(new ExtensionPositionCommand(_arm, ArmConstants.shoulderEncoderHighCone, 2));
   }
 
   /**
@@ -111,6 +114,7 @@ public class RobotContainer {
     m_chooser.addOption("Follow Path", Autos.followPath(_drive, _gyro));
     m_chooser.addOption("Center Ramp", Autos.centerRamp(_drive));
     m_chooser.addOption("Score Cone", Autos.ScoreCone(_intake, _arm));
+    m_chooser.addOption("Cable Cone Ramp", Autos.cableConeRamp(_drive, _intake, _arm));
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(m_chooser);

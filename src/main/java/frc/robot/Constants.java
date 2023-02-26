@@ -101,19 +101,19 @@ public final class Constants {
     public static final int shoulderMotorId = 23;
     public static final int extensionMotorId = 24;
 
-    public static final int shoulderEncoderPositionFactor = 1;
+    public static final int shoulderEncoderPositionFactor = 100;
     public static final int shoulderEncoderVelocityFactor = 1;
-    public static double shoulderP = 0.05;
+    public static double shoulderP = 1;
     public static double shoulderI = 0;
     public static double shoulderD = 0;
     public static double shoulderMinOutput = -1;
     public static double shoulderMaxOutput = 1;
     public static int kshoulderMotorCurrentLimit = 40;
 
-    public static double shoulderEncoderBottom = 5;
-    public static double shoulderEncoderMidCone = -40;
-    public static double shoulderEncoderHighCone = -52;
-    public static double shoulderEncoderMax = -55;
+    public static double shoulderEncoderBottom = 1;
+    public static double shoulderEncoderMidCone = -15;
+    public static double shoulderEncoderHighCone = -20;
+    public static double shoulderEncoderMax = -25;
 
     public static int extensionMotorCurrentLimit = 10;
     public static double extensionP = 0.05;

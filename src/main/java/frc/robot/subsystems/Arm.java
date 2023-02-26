@@ -2,9 +2,12 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAlternateEncoder.Type;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
@@ -48,22 +51,21 @@ public class Arm extends SubsystemBase {
         extensionPIDController.setD(ArmConstants.extensionD);
         extensionPIDController.setOutputRange(ArmConstants.extensionMinOutput, ArmConstants.extensionMaxOutput);
 
-        
-        // shoulderEncoder = shoulderMotor.getAbsoluteEncoder(Type.kDutyCycle);
-        shoulderEncoder = shoulderMotor.getEncoder();
+        shoulderEncoder = shoulderMotor.getAlternateEncoder(Type.kQuadrature, 8192);
+        // shoulderEncoder = shoulderMotor.getEncoder();
         shoulderPIDController = shoulderMotor.getPIDController();
         shoulderPIDController.setFeedbackDevice(shoulderEncoder);
        
         // Apply position and velocity conversion factors for the shoulder encoder.
-        // shoulderEncoder.setPositionConversionFactor(ArmConstants.shoulderEncoderPositionFactor);
-        // shoulderEncoder.setVelocityConversionFactor(ArmConstants.shoulderEncoderVelocityFactor);
+        shoulderEncoder.setPositionConversionFactor(ArmConstants.shoulderEncoderPositionFactor);
+        shoulderEncoder.setVelocityConversionFactor(ArmConstants.shoulderEncoderVelocityFactor);
 
         // Set the PID gains for the shoulder motor. 
         // Note these are example gains, and you may need to tune them for your own robot!
         shoulderPIDController.setP(ArmConstants.shoulderP);
         shoulderPIDController.setI(ArmConstants.shoulderI);
         shoulderPIDController.setD(ArmConstants.shoulderD);
-        shoulderPIDController.setOutputRange(ArmConstants.shoulderMinOutput, ArmConstants.shoulderMaxOutput);
+        // shoulderPIDController.setOutputRange(ArmConstants.shoulderMinOutput, ArmConstants.shoulderMaxOutput);
         
         shoulderMotor.setIdleMode(IdleMode.kBrake);
         shoulderMotor.setInverted(true);
