@@ -2,19 +2,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 
-public class ArmCommand  extends CommandBase {
+public class ArmPositionCommand  extends CommandBase {
 
     private Arm _arm;
-    private boolean _isRaise;
+    private double _expectedPosition;
     private double _duration;
     private Timer _timer;
 
     /** Creates a new ArmCommand. */
-    public ArmCommand(Arm arm, boolean isRaise, double runDurationInSeconds) {
+    public ArmPositionCommand(Arm arm, double position, double runDurationInSeconds) {
         this._arm = arm;
-        this._isRaise = isRaise;
+        this._expectedPosition = position;
         this._duration = runDurationInSeconds;
 
         addRequirements(arm);
@@ -30,11 +31,9 @@ public class ArmCommand  extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if(_isRaise) {
-            _arm.shoulderMove(-.4);
-        } else {
-            _arm.shoulderMove(.4);
-        }
+        if(_expectedPosition > ArmConstants.shoulderEncoderBottom && _expectedPosition < ArmConstants.shoulderEncoderMax) {
+            _arm.setShoulderPosition(_expectedPosition);            
+        } 
     }
 
     // Called once the command ends or is interrupted.
@@ -46,6 +45,8 @@ public class ArmCommand  extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return _timer.hasElapsed(_duration);
+        double positionVariance = 2;
+        boolean armInPosition = ((_arm.getShoulderPosition() + positionVariance) >= _expectedPosition || (_arm.getShoulderPosition() - positionVariance) <= _expectedPosition);
+        return armInPosition || _timer.hasElapsed(_duration);
     }
 }

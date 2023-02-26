@@ -83,6 +83,12 @@ public class RobotContainer {
   private void configureBindings() {
     // Reset NavX
     leftStick.button(7).onTrue(new InstantCommand(() -> _gyro.zeroNavHeading(), _gyro));
+
+    // opController.a().onTrue(new ArmPositionCommand(_arm, ArmConstants.shoulderEncoderMidCone, 2));
+    // opController.x().onTrue(new ArmPositionCommand(_arm, ArmConstants.shoulderEncoderHighCone, 2));
+
+    // opController.b().onTrue(new ExtensionPositionCommand(_arm, ArmConstants.shoulderEncoderMidCone, 2));
+    // opController.y().onTrue(new ExtensionPositionCommand(_arm, ArmConstants.shoulderEncoderHighCone, 2));
   }
 
   /**

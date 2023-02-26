@@ -27,7 +27,7 @@ public class ArmControllerCommand extends CommandBase {
     @Override
     public void execute() {
         if(Math.abs(_controller.getRightY()) >= .07) {
-            _arm.extensionMove(-_controller.getRightY());
+            _arm.extensionMove(_controller.getRightY());
         } else {
             _arm.extensionMove(0);
         }

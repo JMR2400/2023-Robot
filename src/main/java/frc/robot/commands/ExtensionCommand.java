@@ -3,7 +3,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Intake;
 
 public class ExtensionCommand  extends CommandBase {
 
@@ -32,9 +31,9 @@ public class ExtensionCommand  extends CommandBase {
     @Override
     public void execute() {
         if(_isExtending) {
-            _arm.extensionMove(.4);
-        } else {
             _arm.extensionMove(-.4);
+        } else {
+            _arm.extensionMove(.4);
         }
     }
 

@@ -103,12 +103,26 @@ public final class Constants {
 
     public static final int shoulderEncoderPositionFactor = 1;
     public static final int shoulderEncoderVelocityFactor = 1;
-    public static double shoulderP = 0;
+    public static double shoulderP = 0.05;
     public static double shoulderI = 0;
     public static double shoulderD = 0;
-    public static double shoulderMinOutput = 0;
-    public static double shoulderMaxOutput = 0;
+    public static double shoulderMinOutput = -1;
+    public static double shoulderMaxOutput = 1;
     public static int kshoulderMotorCurrentLimit = 40;
+
+    public static double shoulderEncoderBottom = 5;
+    public static double shoulderEncoderMidCone = -40;
+    public static double shoulderEncoderHighCone = -52;
+    public static double shoulderEncoderMax = -55;
+
+    public static int extensionMotorCurrentLimit = 10;
+    public static double extensionP = 0.05;
+    public static double extensionI = 0;
+    public static double extensionD = 0;
+    public static double extensionMinOutput = -.5;
+    public static double extensionMaxOutput = .5;
+    public static double extensionEncoderIn;
+    public static double extensionEncoderMax;
   }
 
   public static final class IntakeConstants {

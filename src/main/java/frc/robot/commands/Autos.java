@@ -96,11 +96,11 @@ public final class Autos {
 
   public static CommandBase ScoreCone(Intake intake, Arm arm) {
     return new SequentialCommandGroup(
-        new ArmCommand(arm, true, 3),
-        new ExtensionCommand(arm, true, 2),
-        new IntakeConeCommand(intake, true, 2),
-        new ExtensionCommand(arm, false, 2),
-        new ArmCommand(arm, false, 3)
+        new ArmCommand(arm, true,1),
+        new ExtensionCommand(arm, true, 1),
+        new IntakeConeCommand(intake, true, 1),
+        new ExtensionCommand(arm, false, 1),
+        new ArmCommand(arm, false, 1)
     );
   }
 }
