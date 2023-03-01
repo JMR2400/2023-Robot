@@ -4,7 +4,13 @@
 
 package frc.robot.commands;
 
+
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.NavXGyro;
@@ -18,14 +24,16 @@ public class DriveBalanceCommand extends CommandBase {
     public static final double DEADZONE_LSTICK = 0.07;
     private static final double DEADZONE_RSTICK = 0.07;
 
-    private static final double BalanceD = 0;
-    private static final double BalanceP = 0;
+    private static final double BalanceP = 0.008;
     private static final double BalanceI = 0;
-    PIDController balanceContoller;
+    private static final double BalanceD = 0;
+    private PIDController balanceContoller;
     private double originHeading = 0.0;
     private double originRoll = 0.0;
     private double leftPow = 1;
     private double rightPow = 1;
+    private Timer _timer;
+    
 
     /**
      * Creates a new DriveCommand using a standard set of joysticks as the driver
@@ -35,6 +43,7 @@ public class DriveBalanceCommand extends CommandBase {
         this._drive = drive;
         this._navXGyro = gyro;
 
+
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drive);
     }
@@ -42,18 +51,29 @@ public class DriveBalanceCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        originHeading = _navXGyro.getZeroAngle();
-        originRoll = _navXGyro.getRollAngle();
+        _timer = new Timer();
+        
+        // Set Drives to Break Mode to limit movement when balancing
+        _drive.setDrivesMode(IdleMode.kBrake);
+
         balanceContoller = new PIDController(BalanceP, BalanceI, BalanceD);
+        balanceContoller.setP(BalanceP);
+        balanceContoller.setI(BalanceI);
+        balanceContoller.setD(BalanceD);
+        balanceContoller.setTolerance(1.5);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        _timer.start();
+        double directionforce = balanceContoller.calculate(_navXGyro.getPitchAngle(), 0);
+        SmartDashboard.putNumber("Current Roll", _navXGyro.getPitchAngle());
+        SmartDashboard.putNumber("Direction Force", directionforce);
+		
+        double stickForward = directionforce;
+        SmartDashboard.putNumber("Forward Power", stickForward);
 
-        double directionforce = balanceContoller.calculate(originRoll, 0);
-
-        double stickForward = -directionforce;
         double stickStrafe = 0.0;
         double stickOmega = 0.0;
 
@@ -77,19 +97,28 @@ public class DriveBalanceCommand extends CommandBase {
         if (Math.abs(omega) < DEADZONE_RSTICK * OMEGA_SCALE)
             omega = 0.0;
 
-        this._drive.processInput(forward, strafe, omega, false, false);
+        if (_timer.hasElapsed(.1)) {
+            this._drive.processInput(0.0, 0.0, 0.0, true, false);
+            _timer.stop();
+        } else {
+            this._drive.processInput(forward, strafe, omega, false, false);
+        }
+        _timer.reset();
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         this._drive.processInput(0.0, 0.0, 0.0, true, false);
+        // Reset Drives back to coast mode for teleop.
+        this._drive.setDrivesMode(IdleMode.kCoast);
 
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return balanceContoller.atSetpoint();
+       return false;
+        // return balanceContoller.atSetpoint();
     }
 }

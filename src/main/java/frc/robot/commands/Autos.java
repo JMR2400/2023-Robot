@@ -6,6 +6,9 @@ package frc.robot.commands;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
@@ -19,6 +22,7 @@ import frc.robot.commands.autonomous.DoNothingCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.NavXGyro;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
@@ -35,17 +39,25 @@ public final class Autos {
     return new DoNothingCommand();
   }
 
-  public static CommandBase centerRamp(Drive drive) {
+  public static CommandBase centerRamp(Drive drive, NavXGyro gyro) {
 
-    PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath("Center-Ramp", 4, 3);
-    PPSwerveControllerCommand driveCommand = getTrajectoryCommand(pathTrajectory, false, drive);
+    // PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath("Center-Ramp", 5, 3);
+    List<PathPlannerTrajectory> pathTrajectoryGroup = PathPlanner.loadPathGroup("Center-Ramp", new PathConstraints(1, 1), new PathConstraints(5, 3));
+    PPSwerveControllerCommand cubeDropDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(0), false, drive);
+    PPSwerveControllerCommand hitRampDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(1), false, drive);
 
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
           // Reset odometry for the first path you run during auto
-          drive.resetOdometry(pathTrajectory.getInitialHolonomicPose());
+          drive.resetOdometry(pathTrajectoryGroup.get(0).getInitialHolonomicPose());
         }),
-        driveCommand);
+        cubeDropDriveCommand,
+        hitRampDriveCommand,
+        new DriveBalanceCommand(drive, gyro));
+  }
+
+  public static CommandBase balance(Drive drive, NavXGyro gyro) {
+    return new DriveBalanceCommand(drive, gyro);
   }
 
   public static CommandBase cableDriveStraight(Drive drive) {

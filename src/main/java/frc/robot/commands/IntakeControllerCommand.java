@@ -26,10 +26,18 @@ public class IntakeControllerCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if(Math.abs(_controller.getLeftTriggerAxis()) >= .02) {
+        if (Math.abs(_controller.getLeftTriggerAxis()) >= .02) {
+            // Cone Intake
             _intake.intakeMove(_controller.getLeftTriggerAxis());
-        } else if(Math.abs(_controller.getRightTriggerAxis()) >= .02) {
-            _intake.intakeMove(-_controller.getRightTriggerAxis());
+        // } else if (_controller.leftBumper().getAsBoolean()) {
+        //     // Cube Intake
+        //     _intake.intakeMove(-0.6);
+        } else if (Math.abs(_controller.getRightTriggerAxis()) >= .02) {
+            // Cone Output
+            _intake.intakeMove(_controller.getRightTriggerAxis());
+        // } else if (_controller.rightBumper().getAsBoolean()) {
+        //     // Cube Output
+        //     _intake.intakeMove(-0.6);
         } else {
             _intake.intakeMove(0);
         }

@@ -255,6 +255,11 @@ public class SwerveModule extends SubsystemBase {
     }
   }
 
+  // Set Drive Mode for Auto
+  public void setDriveMode(IdleMode idleMode) {
+    driveMotor.setIdleMode(idleMode);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

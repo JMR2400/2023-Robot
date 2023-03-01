@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -330,6 +332,14 @@ public class Drive extends SubsystemBase {
 		frontRight.stop();
 		backLeft.stop();
 		backRight.stop();
+	}
+
+	// Set Drive mode for balance Auto
+	public void setDrivesMode(IdleMode idleMode) {
+		frontLeft.setDriveMode(idleMode);
+		frontRight.setDriveMode(idleMode);
+		backLeft.setDriveMode(idleMode);
+		backRight.setDriveMode(idleMode);
 	}
 
 	public void disableRamping() {

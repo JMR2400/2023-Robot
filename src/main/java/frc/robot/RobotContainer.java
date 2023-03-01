@@ -113,7 +113,8 @@ public class RobotContainer {
     m_chooser.addOption("Do Nothing", Autos.doNothing());
     m_chooser.addOption("Cable Straight", Autos.cableDriveStraight(_drive));
     m_chooser.addOption("Barrier Straight", Autos.barrierDriveStraight(_drive));
-    m_chooser.addOption("Center Ramp", Autos.centerRamp(_drive));
+    m_chooser.addOption("Center Ramp", Autos.centerRamp(_drive, _gyro));
+    m_chooser.addOption("Balance", Autos.balance(_drive, _gyro));
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(m_chooser);

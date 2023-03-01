@@ -83,7 +83,7 @@ public class NavXGyro extends SubsystemBase {
     return Rotation2d.fromDegrees(getHeading());
   }
 
-  public double getRollAngle() {
-    return navX.getRoll();
+  public double getPitchAngle() {
+    return navX.getPitch();
   }
 }
