@@ -34,7 +34,7 @@ public class IntakeControllerCommand extends CommandBase {
         //     _intake.intakeMove(-0.6);
         } else if (Math.abs(_controller.getRightTriggerAxis()) >= .02) {
             // Cone Output
-            _intake.intakeMove(_controller.getRightTriggerAxis());
+            _intake.intakeMove(_controller.getRightTriggerAxis()*-1);
         // } else if (_controller.rightBumper().getAsBoolean()) {
         //     // Cube Output
         //     _intake.intakeMove(-0.6);
