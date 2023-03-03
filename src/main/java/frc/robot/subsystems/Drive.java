@@ -34,8 +34,8 @@ public class Drive extends SubsystemBase {
 	public double heading;
 	public double angle;
 
-	private static final double WHEEL_BASE_LENGTH = 24;
-	private static final double WHEEL_BASE_WIDTH = 22;
+	private static final double WHEEL_BASE_LENGTH = 23.5;//24;
+	private static final double WHEEL_BASE_WIDTH = 21.5;//22;
 
 	// private static final double WHEEL_DIAMETER = 4.0;
 	// TO DO: Correct equation that uses MAX_SPEED

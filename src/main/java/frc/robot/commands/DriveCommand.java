@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.subsystems.Drive;
@@ -42,6 +44,7 @@ public class DriveCommand extends CommandBase {
         This will be used as the initial angle of the robot for field centric control.
     */
     originHeading = _navXGyro.getZeroAngle();
+    _drive.setDrivesMode(IdleMode.kCoast);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

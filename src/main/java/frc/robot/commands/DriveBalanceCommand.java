@@ -68,11 +68,11 @@ public class DriveBalanceCommand extends CommandBase {
     public void execute() {
         _timer.start();
         double directionforce = balanceContoller.calculate(_navXGyro.getPitchAngle(), 0);
-        SmartDashboard.putNumber("Current Roll", _navXGyro.getPitchAngle());
-        SmartDashboard.putNumber("Direction Force", directionforce);
+        // SmartDashboard.putNumber("Current Roll", _navXGyro.getPitchAngle());
+        // SmartDashboard.putNumber("Direction Force", directionforce);
 		
         double stickForward = directionforce;
-        SmartDashboard.putNumber("Forward Power", stickForward);
+        // SmartDashboard.putNumber("Forward Power", stickForward);
 
         double stickStrafe = 0.0;
         double stickOmega = 0.0;
