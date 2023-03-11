@@ -255,9 +255,14 @@ public class SwerveModule extends SubsystemBase {
     }
   }
 
-  // Set Drive Mode for Auto
+  // Set Drive Mode
   public void setDriveMode(IdleMode idleMode) {
     driveMotor.setIdleMode(idleMode);
+  }
+
+  // Get Drvie Mode
+  public IdleMode getDriveMode() {
+    return driveMotor.getIdleMode();
   }
 
   @Override

@@ -342,6 +342,16 @@ public class Drive extends SubsystemBase {
 		backRight.setDriveMode(idleMode);
 	}
 
+	public void setDriveModeCoast() {
+		setDrivesMode(IdleMode.kCoast);
+		isCoastMode = true;
+	}
+
+	public void setDriveModeBrake() {
+		setDrivesMode(IdleMode.kBrake);
+		isCoastMode = false;
+	}
+
 	public void disableRamping() {
 		frontLeft.driveMotorRamp(false);
 		frontRight.driveMotorRamp(false);
@@ -356,5 +366,10 @@ public class Drive extends SubsystemBase {
 		frontRight.setDesiredState(desiredStates[1]);
 		backLeft.setDesiredState(desiredStates[2]);
 		backRight.setDesiredState(desiredStates[3]);
+	}
+
+	private boolean isCoastMode = true;
+	public boolean toggleMode() {
+		return isCoastMode;
 	}
 }
