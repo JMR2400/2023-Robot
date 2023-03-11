@@ -116,13 +116,10 @@ public final class Constants {
     public static double shoulderEncoderMax = -25;
 
     public static int extensionMotorCurrentLimit = 10;
-    public static double extensionP = 0.05;
-    public static double extensionI = 0;
-    public static double extensionD = 0;
     public static double extensionMinOutput = -.5;
     public static double extensionMaxOutput = .5;
-    public static double extensionEncoderIn;
-    public static double extensionEncoderMax;
+    public static double extensionEncoderIn = 1025;
+    public static double extensionEncoderMax = 1715;
   }
 
   public static final class IntakeConstants {

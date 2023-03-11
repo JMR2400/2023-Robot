@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAlternateEncoder.Type;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
@@ -23,6 +24,8 @@ public class Arm extends SubsystemBase {
     private CANSparkMax shoulderMotor;
     private RelativeEncoder shoulderEncoder;
     private SparkMaxPIDController shoulderPIDController;
+
+    private AnalogInput extPot;
     
     public static Arm getInstance() {
         if(instance == null) {
@@ -32,6 +35,8 @@ public class Arm extends SubsystemBase {
     }
 
     private Arm() {
+        extPot = new AnalogInput(0);
+
         extensionMotor = new CANSparkMax(ArmConstants.extensionMotorId, MotorType.kBrushless);
         shoulderMotor = new CANSparkMax(ArmConstants.shoulderMotorId, MotorType.kBrushless);
 
@@ -42,14 +47,14 @@ public class Arm extends SubsystemBase {
         // shoulderMotor.restoreFactoryDefaults();
 
         // Setup encoders and PID controllers for the shoulder and extension SPARKS MAX.
-        extensionEncoder = extensionMotor.getEncoder();        
-        extensionPIDController = extensionMotor.getPIDController();
-        extensionPIDController.setFeedbackDevice(extensionEncoder);
+        // extensionEncoder = extensionMotor.getEncoder();        
+        // extensionPIDController = extensionMotor.getPIDController();
+        // extensionPIDController.setFeedbackDevice(extensionEncoder);
 
-        extensionPIDController.setP(ArmConstants.extensionP);
-        extensionPIDController.setI(ArmConstants.extensionI);
-        extensionPIDController.setD(ArmConstants.extensionD);
-        extensionPIDController.setOutputRange(ArmConstants.extensionMinOutput, ArmConstants.extensionMaxOutput);
+        // extensionPIDController.setP(ArmConstants.extensionP);
+        // extensionPIDController.setI(ArmConstants.extensionI);
+        // extensionPIDController.setD(ArmConstants.extensionD);
+        // extensionPIDController.setOutputRange(ArmConstants.extensionMinOutput, ArmConstants.extensionMaxOutput);
 
         shoulderEncoder = shoulderMotor.getAlternateEncoder(Type.kQuadrature, 8192);
         // shoulderEncoder = shoulderMotor.getEncoder();
@@ -99,14 +104,15 @@ public class Arm extends SubsystemBase {
 
     public void extensionMove(double speed) {
         extensionMotor.set(speed);
-        SmartDashboard.putNumber("Extension Encoder", extensionEncoder.getPosition());
+        // SmartDashboard.putNumber("Extension Encoder", extensionEncoder.getPosition());
     }
 
     public double getExtensionPosition() {
-        return extensionEncoder.getPosition();
+        SmartDashboard.putNumber("Extension Posotion", extPot.getValue());
+        return extPot.getValue();
     }
 
     public void setExtensionPosition(double position) {
-        extensionPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
+        // extensionPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
     }
 }

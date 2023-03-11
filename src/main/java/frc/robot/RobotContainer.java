@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ExtensionPositionCommand;
 import frc.robot.commands.IntakeControllerCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drive;
@@ -95,8 +97,8 @@ public class RobotContainer {
     // opController.a().whileTrue(new ArmPositionCommand(_arm, ArmConstants.shoulderEncoderMidCone, 2));
     // opController.x().whileTrue(new ArmPositionCommand(_arm, ArmConstants.shoulderEncoderHighCone, 2));
 
-    // opController.b().whileTrue(new ExtensionPositionCommand(_arm, ArmConstants.shoulderEncoderMidCone, 2));
-    // opController.y().whileTrue(new ExtensionPositionCommand(_arm, ArmConstants.shoulderEncoderHighCone, 2));
+    opController.b().onTrue(new ExtensionPositionCommand(_arm, ArmConstants.extensionEncoderIn, 1));
+    opController.y().onTrue(new ExtensionPositionCommand(_arm, ArmConstants.extensionEncoderMax, 1));
   }
 
   /**

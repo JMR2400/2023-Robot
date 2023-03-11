@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     // RobotContainer._drive.getSteerEncoderVal();
+    RobotContainer._arm.getExtensionPosition();
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -83,7 +84,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    RobotContainer._arm.getExtensionPosition();
+  }
 
   @Override
   public void testInit() {
