@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -18,8 +17,6 @@ public class Arm extends SubsystemBase {
     private static Arm instance;
 
     private CANSparkMax extensionMotor;
-    private RelativeEncoder extensionEncoder;
-    private SparkMaxPIDController extensionPIDController;
     
     private CANSparkMax shoulderMotor;
     private RelativeEncoder shoulderEncoder;
@@ -45,16 +42,6 @@ public class Arm extends SubsystemBase {
         // them. This is useful in case a SPARK MAX is swapped out.
         extensionMotor.restoreFactoryDefaults();
         // shoulderMotor.restoreFactoryDefaults();
-
-        // Setup encoders and PID controllers for the shoulder and extension SPARKS MAX.
-        // extensionEncoder = extensionMotor.getEncoder();        
-        // extensionPIDController = extensionMotor.getPIDController();
-        // extensionPIDController.setFeedbackDevice(extensionEncoder);
-
-        // extensionPIDController.setP(ArmConstants.extensionP);
-        // extensionPIDController.setI(ArmConstants.extensionI);
-        // extensionPIDController.setD(ArmConstants.extensionD);
-        // extensionPIDController.setOutputRange(ArmConstants.extensionMinOutput, ArmConstants.extensionMaxOutput);
 
         shoulderEncoder = shoulderMotor.getAlternateEncoder(Type.kQuadrature, 8192);
         // shoulderEncoder = shoulderMotor.getEncoder();

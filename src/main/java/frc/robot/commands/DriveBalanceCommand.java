@@ -5,12 +5,10 @@
 package frc.robot.commands;
 
 
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.NavXGyro;
@@ -28,8 +26,6 @@ public class DriveBalanceCommand extends CommandBase {
     private static final double BalanceI = 0;
     private static final double BalanceD = 0;
     private PIDController balanceContoller;
-    private double originHeading = 0.0;
-    private double originRoll = 0.0;
     private double leftPow = 1;
     private double rightPow = 1;
     private Timer _timer;
