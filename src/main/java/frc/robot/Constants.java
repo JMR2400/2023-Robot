@@ -120,6 +120,9 @@ public final class Constants {
     public static double extensionMaxOutput = .5;
     public static double extensionEncoderIn = 1025;
     public static double extensionEncoderMax = 1715;
+
+    public static double armPostionConeFlip = 0;
+    public static double extensionPositionConeFlip = 0;
   }
 
   public static final class IntakeConstants {

@@ -31,16 +31,16 @@ public class ExtensionCommand  extends CommandBase {
     @Override
     public void execute() {
         if(_isExtending) {
-            _arm.extensionMove(-.4);
-        } else {
             _arm.extensionMove(.4);
+        } else {
+            _arm.extensionMove(-.4);
         }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        _arm.shoulderMove(0);
+        _arm.extensionMove(0);
     }
 
     // Returns true when the command should end.

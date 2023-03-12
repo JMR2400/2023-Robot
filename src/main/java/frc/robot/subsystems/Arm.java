@@ -23,10 +23,10 @@ public class Arm extends SubsystemBase {
     private CANSparkMax extensionMotor;
     
     private CANSparkMax shoulderMotor;
-    private RelativeEncoder shoulderEncoder;
-    private SparkMaxPIDController shoulderPIDController;
+    
     private final Encoder arm_QuadEncoder;
     private final DutyCycleEncoder arm_AbsEncoder;
+
     private AnalogInput extPot;
     
     public static Arm getInstance() {
@@ -77,22 +77,6 @@ public class Arm extends SubsystemBase {
         // them. This is useful in case a SPARK MAX is swapped out.
         extensionMotor.restoreFactoryDefaults();
         // shoulderMotor.restoreFactoryDefaults();
-
-        shoulderEncoder = shoulderMotor.getAlternateEncoder(Type.kQuadrature, 8192);
-        // shoulderEncoder = shoulderMotor.getEncoder();
-        shoulderPIDController = shoulderMotor.getPIDController();
-        shoulderPIDController.setFeedbackDevice(shoulderEncoder);
-       
-        // Apply position and velocity conversion factors for the shoulder encoder.
-        shoulderEncoder.setPositionConversionFactor(ArmConstants.shoulderEncoderPositionFactor);
-        shoulderEncoder.setVelocityConversionFactor(ArmConstants.shoulderEncoderVelocityFactor);
-
-        // Set the PID gains for the shoulder motor. 
-        // Note these are example gains, and you may need to tune them for your own robot!
-        shoulderPIDController.setP(ArmConstants.shoulderP);
-        shoulderPIDController.setI(ArmConstants.shoulderI);
-        shoulderPIDController.setD(ArmConstants.shoulderD);
-        // shoulderPIDController.setOutputRange(ArmConstants.shoulderMinOutput, ArmConstants.shoulderMaxOutput);
         
         shoulderMotor.setIdleMode(IdleMode.kBrake);
         shoulderMotor.setInverted(true);
@@ -112,16 +96,14 @@ public class Arm extends SubsystemBase {
 
     public void shoulderMove(double speed) {
         shoulderMotor.set(speed);
-        SmartDashboard.putNumber("Shoulder Encoder", shoulderEncoder.getPosition());
     }
 
     public double getShoulderPosition() {
-        return shoulderEncoder.getPosition();
+        return 0;
     }
 
     public void setShoulderPosition(double position) {        
-        SmartDashboard.putNumber("Shoulder Encoder", shoulderEncoder.getPosition());
-        shoulderPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
+        
     }
 
     public void extensionMove(double speed) {
@@ -130,7 +112,6 @@ public class Arm extends SubsystemBase {
     }
 
     public double getExtensionPosition() {
-        SmartDashboard.putNumber("Extension Posotion", extPot.getValue());
         return extPot.getValue();
     }
 
@@ -139,6 +120,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getAbsArmPos(){
+        SmartDashboard.putNumber("Arm Posotion", arm_AbsEncoder.getDistance());
         return arm_AbsEncoder.getDistance();
     };
 

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Arm;
@@ -27,12 +28,14 @@ public class ArmControllerCommand extends CommandBase {
     @Override
     public void execute() {
         if(Math.abs(_controller.getRightY()) >= .07) {
+            SmartDashboard.putNumber("Extension Position", _arm.getExtensionPosition());
             _arm.extensionMove(_controller.getRightY());
         } else {
             _arm.extensionMove(0);
         }
 
         if(Math.abs(_controller.getLeftY()) >= .07) {
+            SmartDashboard.putNumber("Arm Position", _arm.getAbsArmPos());
             _arm.shoulderMove(_controller.getLeftY()*.5);
         } else {
             _arm.shoulderMove(0);

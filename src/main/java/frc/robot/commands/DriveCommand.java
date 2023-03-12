@@ -19,8 +19,8 @@ public class DriveCommand extends CommandBase {
   private NavXGyro _navXGyro;
 
   public static final double OMEGA_SCALE = 1.0 / 45.0;//30
-	public static final double DEADZONE_LSTICK = 0.07;
-	private static final double DEADZONE_RSTICK = 0.07;
+	public static final double DEADZONE_LSTICK = 0.1;
+	private static final double DEADZONE_RSTICK = 0.1;
 	private double originHeading = 0.0;
 	private double leftPow = 1;
 	private double rightPow = 1;

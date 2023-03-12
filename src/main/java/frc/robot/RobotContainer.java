@@ -116,10 +116,10 @@ public class RobotContainer {
    */
   private void autonomousOptions() {
     // Example adding Autonomous option to chooser
-    // m_chooser.addOption("Example", Autos.exampleAuto(m_exampleSubsystem));
     m_chooser.addOption("Do Nothing", Autos.doNothing());
     m_chooser.addOption("Cable Straight", Autos.cableDriveStraight(_drive));
     m_chooser.addOption("Barrier Straight", Autos.barrierDriveStraight(_drive));
+    m_chooser.addOption("Barrier Ramp", Autos.barrierRamp(_drive, _gyro, _intake, _arm));
     m_chooser.addOption("Center Ramp", Autos.centerRamp(_drive, _gyro));
 
     // Put the chooser on the dashboard

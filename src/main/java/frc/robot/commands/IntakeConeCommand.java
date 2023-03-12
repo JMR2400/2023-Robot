@@ -31,12 +31,15 @@ public class IntakeConeCommand extends CommandBase {
     @Override
     public void execute() {
         if (_isOut) {
-            _intake.intakeMove(.5);
+            if (_intake.getOutputCurrent() < 15) {
+                _intake.intakeMove(.5);
+            }
         } else if (!_isOut) {
-            _intake.intakeMove(-.5);
-        } else {
-            _intake.intakeMove(0);
+            if (_intake.getOutputCurrent() < 15) {
+                _intake.intakeMove(-.5);
+            }
         }
+        _intake.intakeMove(0);
     }
 
     // Called once the command ends or is interrupted.
