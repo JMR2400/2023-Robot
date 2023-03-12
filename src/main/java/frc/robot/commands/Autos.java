@@ -15,11 +15,14 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.autonomous.DoNothingCommand;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NavXGyro;
 
 public final class Autos {
@@ -40,10 +43,12 @@ public final class Autos {
   public static CommandBase centerRamp(Drive drive, NavXGyro gyro) {
 
     // PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath("Center-Ramp", 5, 3);
-    
-    List<PathPlannerTrajectory> pathTrajectoryGroup = PathPlanner.loadPathGroup("Center-Ramp", new PathConstraints(1, 1), new PathConstraints(3, 2), new PathConstraints(5, 3));
+
+    List<PathPlannerTrajectory> pathTrajectoryGroup = PathPlanner.loadPathGroup("Center-Ramp",
+        new PathConstraints(1, 1), new PathConstraints(2, 2), new PathConstraints(5, 3));
     PPSwerveControllerCommand cubeDropDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(0), false, drive);
     PPSwerveControllerCommand overRampDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(1), false, drive);
+    PPSwerveControllerCommand backToRampDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(2), false, drive);
 
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
@@ -52,19 +57,50 @@ public final class Autos {
         }),
         cubeDropDriveCommand,
         overRampDriveCommand,
+        backToRampDriveCommand,
+        new DriveBalanceCommand(drive, gyro));
+  }
+
+  public static CommandBase barrierRamp(Drive drive, NavXGyro gyro, Intake intake, Arm arm) {
+
+    // PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath("Center-Ramp", 5,
+    // 3);
+
+    List<PathPlannerTrajectory> pathTrajectoryGroup = PathPlanner.loadPathGroup("Barrier-K-Ramp",
+        new PathConstraints(1, 1), new PathConstraints(7, 3), new PathConstraints(7, 3));
+    PPSwerveControllerCommand cubeDropDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(0), false, drive);
+    PPSwerveControllerCommand exitCommunityDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(1), false,
+        drive);
+    PPSwerveControllerCommand backToRampDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(2), false, drive);
+
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          // Reset odometry for the first path you run during auto
+          drive.resetOdometry(pathTrajectoryGroup.get(0).getInitialHolonomicPose());
+        }),
+        cubeDropDriveCommand,
+        new ParallelCommandGroup(
+            exitCommunityDriveCommand,
+            new ArmCommand(arm, true, .5)),
+        // new ExtensionCommand(arm, true, .25),
+        new ParallelCommandGroup(
+            new IntakeConeCommand(intake, false, 5), 
+            backToRampDriveCommand),
         new DriveBalanceCommand(drive, gyro));
   }
 
   public static CommandBase cableDriveStraight(Drive drive) {
 
     // Generate trajectory
-    //PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath("Cable-Straight", new PathConstraints(1.5, 2));
-    List<PathPlannerTrajectory> pathTrajectoryGroup = PathPlanner.loadPathGroup("Cable-Straight", new PathConstraints(1.5, 2), new PathConstraints(2, 2), new PathConstraints(5, 3));
-    
+    // PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath("Cable-Straight",
+    // new PathConstraints(1.5, 2));
+    List<PathPlannerTrajectory> pathTrajectoryGroup = PathPlanner.loadPathGroup("Cable-Straight",
+        new PathConstraints(1.5, 2), new PathConstraints(2, 2), new PathConstraints(5, 3));
+
     PPSwerveControllerCommand cubeJigCommand = getTrajectoryCommand(pathTrajectoryGroup.get(0), false, drive);
-    PPSwerveControllerCommand beforeCableDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(1),false, drive);
-    PPSwerveControllerCommand afterCableDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(2),false, drive);
-    
+    PPSwerveControllerCommand beforeCableDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(1), false, drive);
+    PPSwerveControllerCommand afterCableDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(2), false, drive);
+
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
           // Reset odometry for the first path you run during auto
@@ -74,13 +110,15 @@ public final class Autos {
         beforeCableDriveCommand,
         afterCableDriveCommand);
   }
-  
+
   public static CommandBase barrierDriveStraight(Drive drive) {
 
     // Generate trajectory
-    //PathPlannerTrajectory pathTrajectory = PathPlanner.loadPath("Barrier-Straight", new PathConstraints(4, 3));
-    List<PathPlannerTrajectory> pathTrajectoryGroup = PathPlanner.loadPathGroup("Cable-Straight", new PathConstraints(1.5, 2), new PathConstraints(5, 3));
-    
+    // PathPlannerTrajectory pathTrajectory =
+    // PathPlanner.loadPath("Barrier-Straight", new PathConstraints(4, 3));
+    List<PathPlannerTrajectory> pathTrajectoryGroup = PathPlanner.loadPathGroup("Cable-Straight",
+        new PathConstraints(1.5, 2), new PathConstraints(5, 3));
+
     PPSwerveControllerCommand cubeJigCommand = getTrajectoryCommand(pathTrajectoryGroup.get(0), false, drive);
     PPSwerveControllerCommand exitDriveCommand = getTrajectoryCommand(pathTrajectoryGroup.get(1), false, drive);
 
@@ -89,11 +127,12 @@ public final class Autos {
           // Reset odometry for the first path you run during auto
           drive.resetOdometry(pathTrajectoryGroup.get(0).getInitialHolonomicPose());
         }),
-        cubeJigCommand, 
+        cubeJigCommand,
         exitDriveCommand);
   }
 
-  private static PPSwerveControllerCommand getTrajectoryCommand(PathPlannerTrajectory pathTrajectory, boolean useAllianceColor, Drive drive) {
+  private static PPSwerveControllerCommand getTrajectoryCommand(PathPlannerTrajectory pathTrajectory,
+      boolean useAllianceColor, Drive drive) {
     // Define PID controllers for tracking trajectory
     PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
     PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);

@@ -38,4 +38,8 @@ public class Intake extends SubsystemBase {
         return instance;
     }
 
+    public double getOutputCurrent() {
+        return intakeMotor.getOutputCurrent();
+    }
+
 }
