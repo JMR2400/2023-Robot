@@ -121,7 +121,7 @@ public final class Constants {
     public static double extensionEncoderIn = 1025;
     public static double extensionEncoderMax = 1715;
 
-    public static double armPostionConeFlip = 0;
+    public static double armPostionAutoConeintake = 333;
     public static double extensionPositionConeFlip = 0;
   }
 

@@ -118,9 +118,10 @@ public class RobotContainer {
     // Example adding Autonomous option to chooser
     m_chooser.addOption("Do Nothing", Autos.doNothing());
     m_chooser.addOption("Cable Straight", Autos.cableDriveStraight(_drive));
-    m_chooser.addOption("Barrier Straight", Autos.barrierDriveStraight(_drive));
-    m_chooser.addOption("Barrier Ramp", Autos.barrierRamp(_drive, _gyro, _intake, _arm));
     m_chooser.addOption("Center Ramp", Autos.centerRamp(_drive, _gyro));
+    m_chooser.addOption("Barrier Straight", Autos.barrierDriveStraight(_drive));
+    m_chooser.addOption("Barrier Cone Ramp", Autos.barrierConeRamp(_drive, _gyro, _intake, _arm));
+    // m_chooser.addOption("Barrier Cube Ramp", Autos.barrierCubeRamp(_drive, _gyro, _intake, _arm));
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(m_chooser);
