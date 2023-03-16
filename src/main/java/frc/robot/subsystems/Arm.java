@@ -2,7 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAlternateEncoder.Type;
@@ -23,6 +26,7 @@ public class Arm extends SubsystemBase {
     private CANSparkMax extensionMotor;
     
     private CANSparkMax shoulderMotor;
+    private SparkMaxPIDController shoulderPIDController;
     
     private final Encoder arm_QuadEncoder;
     private final DutyCycleEncoder arm_AbsEncoder;
@@ -41,6 +45,7 @@ public class Arm extends SubsystemBase {
 
         extensionMotor = new CANSparkMax(ArmConstants.extensionMotorId, MotorType.kBrushless);
         shoulderMotor = new CANSparkMax(ArmConstants.shoulderMotorId, MotorType.kBrushless);
+
         arm_QuadEncoder = new Encoder(1, 2, false, CounterBase.EncodingType.k4X);
         /*
         * Defines the number of samples to average when determining the rate.
@@ -70,9 +75,13 @@ public class Arm extends SubsystemBase {
         arm_AbsEncoder = new DutyCycleEncoder(0);
         // Configures the encoder to return a distance of 4 for every rotation
         arm_AbsEncoder.setDistancePerRotation(360.0);
-
-
         
+        shoulderPIDController = extensionMotor.getPIDController();
+        shoulderPIDController.setP(0.0);
+        shoulderPIDController.setI(0.0);
+        shoulderPIDController.setD(0.0);
+
+
         // Factory reset, so we get the SPARKS MAX to a known state before configuring
         // them. This is useful in case a SPARK MAX is swapped out.
         extensionMotor.restoreFactoryDefaults();
@@ -94,41 +103,29 @@ public class Arm extends SubsystemBase {
         // shoulderMotor.burnFlash();
     }
 
-    public void shoulderMove(double speed) {
+    public void shoulderMove(double speed) {        
+        SmartDashboard.putNumber("Current Arm Position", getAbsArmPos());
         shoulderMotor.set(speed);
     }
 
-    public double getShoulderPosition() {
-        return 0;
-    }
-
-    public void setShoulderPosition(double position) {        
-        
-    }
-
     public void extensionMove(double speed) {
+        SmartDashboard.putNumber("Current Extension Position", getExtensionPosition());
         extensionMotor.set(speed);
-        // SmartDashboard.putNumber("Extension Encoder", extensionEncoder.getPosition());
     }
 
     public double getExtensionPosition() {
         return extPot.getValue();
     }
 
-    public void setExtensionPosition(double position) {
-        // extensionPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
-    }
-
-    public double getAbsArmPos(){
-        SmartDashboard.putNumber("Arm Posotion", arm_AbsEncoder.getDistance());
+    public double getAbsArmPos() {
         return arm_AbsEncoder.getDistance();
     };
 
-    public double getQuadPos(){
+    public double getQuadPos() {
         return arm_QuadEncoder.getDistance();
     }
 
-    public double get_QuadArmRate(){
+    public double get_QuadArmRate() {
         return arm_QuadEncoder.getRate();
     }
 

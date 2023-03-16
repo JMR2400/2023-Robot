@@ -14,6 +14,7 @@ import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.NavXGyro;
 import frc.robot.commands.ArmControllerCommand;
+import frc.robot.commands.ArmPositionCommand;
 import frc.robot.commands.Autos;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -94,11 +95,7 @@ public class RobotContainer {
         () -> _drive.toggleMode()
       ));
 
-    // opController.a().whileTrue(new ArmPositionCommand(_arm, ArmConstants.shoulderEncoderMidCone, 2));
-    // opController.x().whileTrue(new ArmPositionCommand(_arm, ArmConstants.shoulderEncoderHighCone, 2));
-
-    opController.b().onTrue(new ExtensionPositionCommand(_arm, ArmConstants.extensionEncoderIn, 1));
-    opController.y().onTrue(new ExtensionPositionCommand(_arm, ArmConstants.extensionEncoderMax, 1));
+    opController.a().whileTrue(new ArmPositionCommand(_arm, ArmConstants.armShoulderPosition, ArmConstants.armExtensionPosition, 3));
   }
 
   /**
@@ -121,7 +118,7 @@ public class RobotContainer {
     m_chooser.addOption("Center Ramp", Autos.centerRamp(_drive, _gyro));
     m_chooser.addOption("Barrier Straight", Autos.barrierDriveStraight(_drive));
     m_chooser.addOption("Barrier Cone Ramp", Autos.barrierConeRamp(_drive, _gyro, _intake, _arm));
-    // m_chooser.addOption("Barrier Cube Ramp", Autos.barrierCubeRamp(_drive, _gyro, _intake, _arm));
+    m_chooser.addOption("Barrier Cube Ramp", Autos.barrierCubeRamp(_drive, _gyro, _intake, _arm));
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(m_chooser);
